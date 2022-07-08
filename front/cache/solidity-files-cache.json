@@ -1,0 +1,122 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/hamid/Projects/jack/MainProjects/weapon-stake-claim/contracts/mw2_staking.sol": {
+      "lastModificationDate": 1648554907067,
+      "contentHash": "63676751a3e1ee4b75dacbc8d47135d4",
+      "sourceName": "contracts/mw2_staking.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Context",
+        "IERC20",
+        "IWEAPONStakable",
+        "MWStaking"
+      ]
+    },
+    "/home/hamid/Projects/jack/MainProjects/weapon-stake-claim/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1648982815736,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/home/hamid/Projects/jack/MainProjects/weapon-stake-claim/contracts/mw2.sol": {
+      "lastModificationDate": 1648747789975,
+      "contentHash": "9cde92ce1c6136a6d5df1490782ca045",
+      "sourceName": "contracts/mw2.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "0.8.4"
+      ],
+      "artifacts": [
+        "Context",
+        "IERC20",
+        "IUniswapV2Router01",
+        "IUniswapV2Router02",
+        "IWEAPONStakable",
+        "WEAPON"
+      ]
+    }
+  }
+}

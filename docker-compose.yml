@@ -1,0 +1,40 @@
+version: '3.7'
+
+volumes:
+  mysql:
+
+
+networks:
+  web:
+    external: true  
+
+services:
+      
+  sheesha_backend:
+    image: sheesha_backend
+    restart: unless-stopped
+    container_name: "sheesha_backend"
+    build:
+      dockerfile: ./backend/Dockerfile
+      context: .
+      args:
+        - NODE_VERSION=14
+    volumes:
+      - ../../:/app
+    networks:
+      - web
+
+
+  mysql:
+    image: mysql
+    restart: 'no'
+    volumes:
+      - mysql:/var/lib/mysql
+    command: ["--explicit_defaults_for_timestamp"]
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: sheesha
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+    networks:
+      - web
