@@ -1,5 +1,3 @@
-
-  export const stakingAddress = "0x3DF4e7671D7E253930D9076974cb8991CAFF93e7"
-  export const tokenAddress = "0x1De2Ea93740A57238F0Ea1a165F90dc51bB8A510"
-  export const tokenMarketAddress = "0x25e2ACA92c18d2191aeC349565161df090b322D2"
-  
+export const stakingAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+export const tokenAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const tokenMarketAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";

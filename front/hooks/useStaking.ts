@@ -39,14 +39,14 @@ export const unstakeTokens = async (
   amount: BigNumberish
 ) => {
   try {
-    console.log(amount)
+    console.log(amount);
     amount = ethers.utils.parseUnits(
       amount.toString(),
       process.env.NEXT_PUBLIC_APP_UNIT
     );
-    console.log(amount)
+    console.log(amount);
 
     const req = await mwStaking.unStake(amount);
     const res = await req.wait();
-  } catch (e) { }
+  } catch (e) {}
 };

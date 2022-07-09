@@ -18,7 +18,7 @@ import {
 } from "./../hooks/useWtoken";
 import { buyTokens } from "../hooks/useMarket";
 import useTokenMarketContract from "../hooks/useTokenMarketContract";
-import { tokenMarketAddress } from "../config";
+import { BehaviorSubject, Observable } from "rxjs";
 
 export default function stake() {
   const { account } = useWeb3React();
@@ -33,40 +33,95 @@ export default function stake() {
   const [allowance, setAllowance] = useState<BigNumberish>(0);
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
 
+  const getBalanceRX$ = new BehaviorSubject<any>("");
+  const getStakedAmount$ = new BehaviorSubject<any>("");
+  const getAllowance$ = new BehaviorSubject<any>("");
+
   useEffect(() => {
+    registerConsumers();
     if (account) {
       setIsWalletConnected(true);
       getAccountInfo();
-
     } else {
       setIsWalletConnected(false);
     }
   }, [account]);
 
+  const registerConsumers = () => {
+    getBalanceRX$.subscribe({
+      next: (accountBalance) => {
+        if (accountBalance) {
+          setBalance(accountBalance! as unknown as BigNumberish);
+        }
+        console.log(accountBalance);
+      },
+      error: (e) => console.error(e),
+      complete: () => console.info("complete"),
+    });
+
+    getStakedAmount$.subscribe({
+      next: (accountBalance) => {
+        if (accountBalance) {
+          setStakedAmount(accountBalance! as unknown as BigNumberish);
+        }
+        console.log(accountBalance);
+      },
+      error: (e) => console.error(e),
+      complete: () => console.info("complete"),
+    });
+
+    getAllowance$.subscribe({
+      next: (accountBalance) => {
+        if (accountBalance) {
+          setAllowance(accountBalance! as unknown as BigNumberish);
+        }
+        console.log(accountBalance);
+      },
+      error: (e) => console.error(e),
+      complete: () => console.info("complete"),
+    });
+  };
 
   const getAccountInfo = () => {
     getBalance();
     getAllowance();
     getStakedAmount();
-  }
-  const getBalance = async () => {
-    const accountBalance = await balanceOfToken(tokenContract!, account!);
-    setBalance(accountBalance!);
+  };
+  const getBalance = () => {
+    balanceOfToken(tokenContract!, account!)
+      .then((res) => {
+        getBalanceRX$.next(res);
+        getBalanceRX$.complete();
+      })
+      .catch((e) => {
+        getBalanceRX$.error(e);
+      });
   };
 
-  const getStakedAmount = async () => {
-    const accountBalance = await getBalanceOfStaked(stakingContract!, account!);
-    setStakedAmount(accountBalance!);
+  const getStakedAmount = () => {
+    getBalanceOfStaked(stakingContract!, account!)
+      .then((res) => {
+        getStakedAmount$.next(res);
+        getStakedAmount$.complete();
+      })
+      .catch((e) => {
+        getStakedAmount$.error(e);
+      });
   };
 
-  const getAllowance = async () => {
-    const accountBalance = await allowanceToken(tokenContract!, account!);
-    setAllowance(accountBalance!);
+  const getAllowance = () => {
+    allowanceToken(tokenContract!, account!)
+      .then((res) => {
+        getAllowance$.next(res);
+        getAllowance$.complete();
+      })
+      .catch((e) => {
+        getAllowance$.error(e);
+      });
   };
   const handleButtonClick = async () => {
     await stakeTokens(stakingContract!, stakeAmount);
     getAccountInfo();
-
   };
 
   const handleApproveButtonClick = async () => {
@@ -82,7 +137,6 @@ export default function stake() {
   const handleunStakeButtonClick = async () => {
     await unstakeTokens(stakingContract!, unStakeAmount);
     getAccountInfo();
-
   };
   if (!isWalletConnected) {
     return <div>Please Connect Wallet to Hardhat</div>;
@@ -178,9 +232,7 @@ export default function stake() {
 
       <Card>
         <div className="flex-1">
-
           <div>
-
             {`your staked amount is ${stakedAmount} , so you can unstake ${stakedAmount} ${process.env.NEXT_PUBLIC_APP_UNIT} in max `}
           </div>
           <input
