@@ -1,7 +1,6 @@
 import { Card } from "../components/Card";
 
 import { Fragment, useEffect, useState } from "react";
-import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { BigNumberish } from "ethers";
 import useStakingContract from "../hooks/useStakingContract";
@@ -18,105 +17,80 @@ import {
 } from "./../hooks/useWtoken";
 import { buyTokens } from "../hooks/useMarket";
 import useTokenMarketContract from "../hooks/useTokenMarketContract";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Subject } from "rxjs";
+import { stakePageStore } from "../rx_store/store";
+import { StakePageStore } from "../rx_store/stake_poage.interface";
 
 export default function stake() {
   const { account } = useWeb3React();
   const [stakeAmount, setStakeAmount] = useState<BigNumberish>(0);
-  const [stakedAmount, setStakedAmount] = useState<BigNumberish>(0);
   const [chargeAmount, setChargeAmount] = useState<BigNumberish>(0);
   const [unStakeAmount, setUnStakeAmount] = useState<BigNumberish>(0);
   const stakingContract = useStakingContract();
   const tokenContract = useTokenContract();
   const tokenMarketContract = useTokenMarketContract();
-  const [balance, setBalance] = useState<BigNumberish>(0);
-  const [allowance, setAllowance] = useState<BigNumberish>(0);
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
 
-  const getBalanceRX$ = new BehaviorSubject<any>("");
-  const getStakedAmount$ = new BehaviorSubject<any>("");
-  const getAllowance$ = new BehaviorSubject<any>("");
+  const getBalanceSubject = new Subject();
+  const getStakedAmountSubject = new Subject();
+  const getAllowanceSubject = new Subject();
+
+  const [stakeState, setStakeState] = useState(stakePageStore.initialState);
 
   useEffect(() => {
-    registerConsumers();
+    stakePageStore.subscribe(setStakeState);
+    stakePageStore.init();
+  }, []);
+
+  useEffect(() => {
     if (account) {
-      setIsWalletConnected(true);
       getAccountInfo();
+      setIsWalletConnected(true);
     } else {
       setIsWalletConnected(false);
     }
   }, [account]);
-
-  const registerConsumers = () => {
-    getBalanceRX$.subscribe({
-      next: (accountBalance) => {
-        if (accountBalance) {
-          setBalance(accountBalance! as unknown as BigNumberish);
-        }
-        console.log(accountBalance);
-      },
-      error: (e) => console.error(e),
-      complete: () => console.info("complete"),
-    });
-
-    getStakedAmount$.subscribe({
-      next: (accountBalance) => {
-        if (accountBalance) {
-          setStakedAmount(accountBalance! as unknown as BigNumberish);
-        }
-        console.log(accountBalance);
-      },
-      error: (e) => console.error(e),
-      complete: () => console.info("complete"),
-    });
-
-    getAllowance$.subscribe({
-      next: (accountBalance) => {
-        if (accountBalance) {
-          setAllowance(accountBalance! as unknown as BigNumberish);
-        }
-        console.log(accountBalance);
-      },
-      error: (e) => console.error(e),
-      complete: () => console.info("complete"),
-    });
-  };
 
   const getAccountInfo = () => {
     getBalance();
     getAllowance();
     getStakedAmount();
   };
+
   const getBalance = () => {
     balanceOfToken(tokenContract!, account!)
       .then((res) => {
-        getBalanceRX$.next(res);
-        getBalanceRX$.complete();
+        const messageObject: Partial<StakePageStore> = {
+          balance: res,
+        };
+        stakePageStore.sendMessage(messageObject);
       })
-      .catch((e) => {
-        getBalanceRX$.error(e);
-      });
+      .catch((e) => {});
   };
 
   const getStakedAmount = () => {
     getBalanceOfStaked(stakingContract!, account!)
       .then((res) => {
-        getStakedAmount$.next(res);
-        getStakedAmount$.complete();
+        const messageObject: Partial<StakePageStore> = {
+          stakedAmount: res,
+        };
+        stakePageStore.sendMessage(messageObject);
       })
       .catch((e) => {
-        getStakedAmount$.error(e);
+        getStakedAmountSubject.error(e);
       });
   };
 
   const getAllowance = () => {
     allowanceToken(tokenContract!, account!)
       .then((res) => {
-        getAllowance$.next(res);
-        getAllowance$.complete();
+        const messageObject: Partial<StakePageStore> = {
+          allowance: res,
+        };
+        stakePageStore.sendMessage(messageObject);
       })
       .catch((e) => {
-        getAllowance$.error(e);
+        getAllowanceSubject.error(e);
       });
   };
   const handleButtonClick = async () => {
@@ -130,7 +104,8 @@ export default function stake() {
   };
 
   const handleChargeButtonClick = async () => {
-    await buyTokens(tokenMarketContract!, chargeAmount, account!);
+    const r = await buyTokens(tokenMarketContract!, chargeAmount, account!);
+
     getAccountInfo();
   };
 
@@ -138,6 +113,7 @@ export default function stake() {
     await unstakeTokens(stakingContract!, unStakeAmount);
     getAccountInfo();
   };
+
   if (!isWalletConnected) {
     return <div>Please Connect Wallet to Hardhat</div>;
   }
@@ -180,7 +156,7 @@ export default function stake() {
             className=" text-center p-1 block w-full h-10 border-2 border-black dark:bg-white"
             placeholder="SHEA balance"
             min={0}
-            value={balance.toString()}
+            value={stakeState.balance.toString()}
             readOnly
           />
           <br />
@@ -189,7 +165,7 @@ export default function stake() {
           <div>
             firs you need to approve then you can stake
             <br />
-            {`your allowance amount is ${allowance} , so you can stake ${allowance} ${process.env.NEXT_PUBLIC_APP_UNIT} in max `}
+            {`your allowance amount is ${stakeState.allowance} , so you can stake ${stakeState.allowance} ${process.env.NEXT_PUBLIC_APP_UNIT} in max `}
           </div>
           <input
             type="number"
@@ -207,7 +183,7 @@ export default function stake() {
           />
 
           <div>
-            {allowance == 0 ? (
+            {stakeState.allowance == 0 ? (
               <button
                 type="button"
                 className="pa2  button-reset ba border-2 border-black  pr-1 pl-1"
@@ -233,7 +209,7 @@ export default function stake() {
       <Card>
         <div className="flex-1">
           <div>
-            {`your staked amount is ${stakedAmount} , so you can unstake ${stakedAmount} ${process.env.NEXT_PUBLIC_APP_UNIT} in max `}
+            {`your staked amount is ${stakeState.stakedAmount} , so you can unstake ${stakeState.stakedAmount} ${process.env.NEXT_PUBLIC_APP_UNIT} in max `}
           </div>
           <input
             type="number"
