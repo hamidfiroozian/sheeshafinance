@@ -19,14 +19,11 @@ export class ContractService {
     @InjectRepository(StakingEventEntity, 'mysql')
     private readonly stakingEventEntityRepo: Repository<StakingEventEntity>,
   ) {
-    // this.collectionAddresses = this.collectionService.getCollectionsAddresses();
     this.rpcEndPoint = configService.getRpcEndpoint();
     this.listenStakingEvents();
   }
 
   listenStakingEvents() {
-    console.log('srart listening to event');
-    console.log('this.rpcEndPoint', this.rpcEndPoint);
     const provider = new ethers.providers.JsonRpcProvider(this.rpcEndPoint);
 
     const stakingContract = new ethers.Contract(

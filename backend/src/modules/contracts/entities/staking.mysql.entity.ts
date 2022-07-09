@@ -1,11 +1,14 @@
 import { BaseEntity } from 'src/core/entities.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, Generated } from 'typeorm';
 import { StakingEventEnum } from '../enums/events.enum';
 
 @Entity({
   synchronize: true,
 })
-export class StakingEventEntity extends BaseEntity<StakingEventEntity> {
+export class StakingEventEntity {
+  @Column({ generated: 'uuid' })
+  id: string;
+
   @Column()
   event!: StakingEventEnum;
 

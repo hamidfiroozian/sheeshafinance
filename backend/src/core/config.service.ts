@@ -1,11 +1,12 @@
 import { SwaggerDocumentOptions } from '@nestjs/swagger';
+import { ContractModule } from 'src/modules/contracts/contract.module';
 
 import { BaseConfig } from './base-config.service';
 
 class Config extends BaseConfig {
   public getExtraModels(): SwaggerDocumentOptions {
     return {
-      extraModels: [],
+      extraModels: [ContractModule],
     };
   }
 
