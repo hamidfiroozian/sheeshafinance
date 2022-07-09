@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -65,8 +69,33 @@ export interface StakeContractInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "investors", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "unStake", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "staked(address,uint256)": EventFragment;
+    "unStaked(address,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "staked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "unStaked"): EventFragment;
 }
+
+export interface stakedEventObject {
+  ad: string;
+  amount: BigNumber;
+}
+export type stakedEvent = TypedEvent<[string, BigNumber], stakedEventObject>;
+
+export type stakedEventFilter = TypedEventFilter<stakedEvent>;
+
+export interface unStakedEventObject {
+  ad: string;
+  amount: BigNumber;
+}
+export type unStakedEvent = TypedEvent<
+  [string, BigNumber],
+  unStakedEventObject
+>;
+
+export type unStakedEventFilter = TypedEventFilter<unStakedEvent>;
 
 export interface StakeContract extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -164,7 +193,13 @@ export interface StakeContract extends BaseContract {
     ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "staked(address,uint256)"(ad?: null, amount?: null): stakedEventFilter;
+    staked(ad?: null, amount?: null): stakedEventFilter;
+
+    "unStaked(address,uint256)"(ad?: null, amount?: null): unStakedEventFilter;
+    unStaked(ad?: null, amount?: null): unStakedEventFilter;
+  };
 
   estimateGas: {
     _WSHEA(overrides?: CallOverrides): Promise<BigNumber>;

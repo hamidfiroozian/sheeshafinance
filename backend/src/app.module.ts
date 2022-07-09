@@ -9,17 +9,17 @@ import { configService } from './core/config.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(configService.getTypeOrmConfig('mysql')),
+    // TypeOrmModule.forRoot(configService.getTypeOrmConfig('mysql')),
     
     ContractModule],
   controllers: [],
   providers: [],
 })
 export class AppModule {
-  constructor() {
-    Holder.setConnections({
-      mysql: getConnection(ConnectionsEnum.MYSQL)
-    });
-  }
+  // constructor() {
+  //   Holder.setConnections({
+  //     mysql: getConnection(ConnectionsEnum.MYSQL)
+  //   });
+  // }
 }
 

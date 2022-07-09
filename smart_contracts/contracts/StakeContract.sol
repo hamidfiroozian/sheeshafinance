@@ -7,6 +7,9 @@ contract StakeContract {
     IERC20 public _WSHEA;
     mapping(address => uint256) public investors;
 
+    event staked(address ad, uint256 amount);
+    event unStaked(address ad, uint256 amount);
+
     constructor(address tokenAddress) {
         _WSHEA = IERC20(tokenAddress);
     }
@@ -16,6 +19,7 @@ contract StakeContract {
         address from = msg.sender;
         _WSHEA.transferFrom(from, address(this), amount);
         investors[from] = investors[from] + amount;
+        emit staked(from, amount);
     }
 
     function balanceOf(address account) public view returns (uint256) {
@@ -31,5 +35,6 @@ contract StakeContract {
         investors[msg.sender] = investors[msg.sender] - amount;
 
         _WSHEA.transfer(msg.sender, amount);
+        emit unStaked(msg.sender, amount);
     }
 }

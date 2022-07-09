@@ -29,9 +29,10 @@ export class ContractService {
 
   listenToMarketplaceEvents() {
     console.log('srart listening to event');
+    console.log('this.rpcEndPoint', this.rpcEndPoint);
     const provider = new ethers.providers.JsonRpcProvider(this.rpcEndPoint);
 
-    const marketContract = new ethers.Contract(
+    const stakingContract = new ethers.Contract(
       stakingAddress,
       StakingAbi.abi,
       provider
@@ -39,16 +40,13 @@ export class ContractService {
 
 
 
-    marketContract.on('MarketItemCreated', async (...any) => {
-      let data = {
-        itemId: any[0].toNumber(),
-        collectionAddress: any[1],
-        tokenId: any[2].toNumber(),
-        seller: any[3],
-        owner: any[4],
-        price: any[5],
-        sold: any[6]
-      };
+    stakingContract.on('staked', async (...any) => {
+      console.log(any)
+    });
+    stakingContract.on('unStaked', async (...any) => {
+      console.log('stakingContract', 'unStake')
+      const amount = any[1].toNumber();
+      const address = any[0];
 
     });
   }
