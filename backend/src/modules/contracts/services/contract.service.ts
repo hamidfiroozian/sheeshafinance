@@ -21,10 +21,10 @@ export class ContractService {
   ) {
     // this.collectionAddresses = this.collectionService.getCollectionsAddresses();
     this.rpcEndPoint = configService.getRpcEndpoint();
-    this.listenToMarketplaceEvents();
+    this.listenStakingEvents();
   }
 
-  listenToMarketplaceEvents() {
+  listenStakingEvents() {
     console.log('srart listening to event');
     console.log('this.rpcEndPoint', this.rpcEndPoint);
     const provider = new ethers.providers.JsonRpcProvider(this.rpcEndPoint);
@@ -62,5 +62,9 @@ export class ContractService {
         tx_id: txId,
       });
     });
+  }
+
+  getAllStakingHistory(): Promise<StakingEventEntity[]> {
+    return this.stakingEventEntityRepo.find();
   }
 }

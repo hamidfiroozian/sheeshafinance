@@ -18,15 +18,22 @@ in backend project you need to add MySql URL in .env file ( i pushed this file j
 now , you can run the frontend and backend
 
 >smart_contract 
->>run npm i 
+>>run npm i
+<br/> 
 >>npx hardhat run scripts/deploy.ts --network localhost 
 <br/>
 
 >backend 
 >> run yarn install
+<br/>
 >> run yarn start:dev
 <br/>
 
 >frontend 
 >> run yarn install
+<br/>
 >> run yarn dev
+
+
+>you can get all history from backend by calling
+>>http://localhost:3001/staking
