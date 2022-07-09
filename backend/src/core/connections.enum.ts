@@ -1,3 +1,3 @@
 export enum ConnectionsEnum {
-  MYSQL = 'mysql'
+  MYSQL = 'mysql',
 }

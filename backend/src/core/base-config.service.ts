@@ -1,13 +1,17 @@
 import { config } from 'dotenv';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+import * as path from 'path';
+
+export const root: string = path.resolve(__dirname, '..');
+
 config();
 
 export class BaseConfig {
   constructor(private readonly env: { [k: string]: string | undefined }) {}
 
   public getTypeOrmConfig(
-    type: 'mysql' | 'postgres' = 'postgres'
+    type: 'mysql' | 'postgres' = 'postgres',
   ): TypeOrmModuleOptions {
     return {
       name: type,
@@ -17,7 +21,7 @@ export class BaseConfig {
       // entities: [__dirname + `/../**/user.entity{.ts,.js}`],/
       retryAttempts: 10,
       retryDelay: 3000,
-      synchronize: this.getDatabaseSynchronize()
+      synchronize: this.getDatabaseSynchronize(),
     };
   }
 

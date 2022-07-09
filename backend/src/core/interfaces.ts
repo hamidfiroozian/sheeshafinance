@@ -41,8 +41,6 @@ export interface IBuySellWonLoss {
   count: number | string;
 }
 
-
-
 export interface IResponse {
   count?: number;
   error?: boolean;
@@ -681,7 +679,7 @@ export type IMessariTimeserie = [
   number,
   number,
   number,
-  number
+  number,
 ];
 export interface IMessariTimeSeries {
   status: {

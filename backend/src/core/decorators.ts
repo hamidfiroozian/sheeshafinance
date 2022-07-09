@@ -3,7 +3,7 @@
 import {
   registerDecorator,
   ValidationArguments,
-  ValidationOptions
+  ValidationOptions,
 } from 'class-validator';
 import { Connection, In, Not, ObjectType } from 'typeorm';
 import { ConnectionsEnum } from './connections.enum';

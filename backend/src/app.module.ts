@@ -5,21 +5,20 @@ import { getConnection } from 'typeorm';
 import { ContractModule } from './modules/contracts/contract.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './core/config.service';
-
+import { StakingEventEntity } from './modules/contracts/entities/staking.mysql.entity';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot(configService.getTypeOrmConfig('mysql')),
-    
-    ContractModule],
+    TypeOrmModule.forRoot(configService.getTypeOrmConfig('mysql')),
+    ContractModule,
+  ],
   controllers: [],
   providers: [],
 })
 export class AppModule {
-  // constructor() {
-  //   Holder.setConnections({
-  //     mysql: getConnection(ConnectionsEnum.MYSQL)
-  //   });
-  // }
+  constructor() {
+    Holder.setConnections({
+      mysql: getConnection(ConnectionsEnum.MYSQL),
+    });
+  }
 }
-

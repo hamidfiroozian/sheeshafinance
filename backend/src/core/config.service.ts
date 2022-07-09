@@ -5,12 +5,9 @@ import { BaseConfig } from './base-config.service';
 class Config extends BaseConfig {
   public getExtraModels(): SwaggerDocumentOptions {
     return {
-      extraModels: [
-      ]
+      extraModels: [],
     };
   }
-
-
 
   public getStakingContractAddress(): string {
     return this.getValue('STAKING_ADDRESS');
