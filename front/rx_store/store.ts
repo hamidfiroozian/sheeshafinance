@@ -1,7 +1,9 @@
 import { Observer, Subject } from "rxjs";
 import { StakePageStore } from "./stake_poage.interface";
+import { TransactionsHistory } from "./transaction_history.interface";
 
 const subject = new Subject();
+const subjectTXs = new Subject();
 
 const initialState = {
   balance: 0,
@@ -9,15 +11,30 @@ const initialState = {
   stakedAmount: 0,
 };
 
-let state: StakePageStore = initialState;
+let stakePageState: StakePageStore = initialState;
 
 export const stakePageStore: any = {
-  init: () => subject.next(state),
+  init: () => subject.next(stakePageState),
   subscribe: (setState: Partial<Observer<unknown>> | undefined) =>
     subject.subscribe(setState),
   sendMessage: (message: Partial<StakePageStore>) => {
     console.log(message);
-    state = { ...state, ...message };
-    subject.next(state);
+    stakePageState = { ...stakePageState, ...message };
+    subject.next(stakePageState);
+  },
+};
+
+const initialTXState: TransactionsHistory[] = [];
+
+let stateTX: TransactionsHistory[] = initialTXState;
+
+export const transactionsStore: any = {
+  init: () => subjectTXs.next(stateTX),
+  subscribe: (setState: Partial<Observer<unknown>> | undefined) =>
+    subjectTXs.subscribe(setState),
+  sendMessage: (message: TransactionsHistory[]) => {
+    console.log(message);
+    stateTX = [...stateTX, ...message];
+    subjectTXs.next(stateTX);
   },
 };

@@ -26,6 +26,7 @@ now , you can run the frontend and backend
 
 >backend 
 >> run yarn install
+>> add backedn address in .env
 <br/>
 
 >> run yarn start:dev

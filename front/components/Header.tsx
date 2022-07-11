@@ -33,6 +33,11 @@ export default function Header({ children }: any) {
                 <NavImage name="STAKE" />
               </a>
             </Link>
+            <Link href="/transactions">
+              <a>
+                <NavImage name="Transactions" />
+              </a>
+            </Link>
           </div>
         </nav>
       </header>
